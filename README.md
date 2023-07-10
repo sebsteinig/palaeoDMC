@@ -31,7 +31,7 @@ bash GP_analysis_wrapper.sh
 
 The newly created CSV files will be saved to `Observation_Data/`.
 
-![alt text](https://github.com/sebsteinig/paleoDMC/blob/main/example_output/DeepMIP_proxy_SD?raw=true)
+![alt text](https://github.com/sebsteinig/paleoDMC/blob/main/example_output/DeepMIP_proxy_SD.png?raw=true)
 
 
 #### 3. Run the Gaussian process regression
