@@ -1,7 +1,7 @@
 export dir="/Volumes/external_Samsung-SSD/documents/coding_github/paleoDMC"
 
 # time_slice_list="eeco petm lp"
-time_slice_list="lp"
+time_slice_list="petm"
 cut_offs="2.5"
 export REF_FRAME="mantle" # or "pmag"
 
