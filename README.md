@@ -26,11 +26,7 @@ conda activate paleoDMC
 In `GP_analysis_wrapper`, set the working directory `dir` in the very first line to the full path of your local repo directory.
 
 #### 3. Create input proxy data
-The full DeepMIP proxy compilation `data/full_deepMIP_temperature_compilation_1.5_subsampled.csv` is used to create CSV subsets for the individual time periods and subsampling experiments described in (Inglis et al., 2020)[https://cp.copernicus.org/articles/16/1953/2020/cp-16-1953-2020.html]. In `GP_analysis_wrapper`, set `convert_hollis=1` and run the script (after activating the new conda environment) with 
-
-```
-bash GP_analysis_wrapper.sh
-```
+The full DeepMIP proxy compilation `data/full_deepMIP_temperature_compilation_1.5_subsampled.csv` is used to create CSV subsets for the individual time periods and subsampling experiments described in (Inglis et al., 2020)[https://cp.copernicus.org/articles/16/1953/2020/cp-16-1953-2020.html]. In `GP_analysis_wrapper`, set `convert_hollis=1` and run the script (after activating the new conda environment) with `bash GP_analysis_wrapper.sh`.
 
 The newly created CSV files are saved to `Observation_Data/`. The main input for this step is a minimum uncertainty threshold (`cut_offs`) that gets applied to all proxy data. The reasoning is that some entries in the DeepMIP proxy collection have unrealistically low uncertainties, which would increase their relevant influence on the GP results. A values of `cut_offs="2.5"` has been used for (Inglis et al., 2020)[https://cp.copernicus.org/articles/16/1953/2020/cp-16-1953-2020.html], but you can enter a list of values to check the sensitivity of the results. Original and updated uncertainties of the full compilation are shown in the Figure below (which gets automatically created by the script).
 
@@ -38,18 +34,11 @@ The newly created CSV files are saved to `Observation_Data/`. The main input for
 
 
 #### 4. Run the Gaussian process regression
-In `GP_analysis_wrapper`, set `calculate_GP=1` and run the script (again, after activating the new conda environment) with 
+In `GP_analysis_wrapper`, set `calculate_GP=1` and run the script (again, after activating the new conda environment) with `bash GP_analysis_wrapper.sh`.
 
-```
-bash GP_analysis_wrapper.sh
-```
-
-This will raun the GP analysis on each subsampling experiment individually and saves the output as netCDF files in the `Output/` directory. Required computation time mainly depends on the size of the chosen output grid (`nc_m`). Results in (Inglis et al., 2020)[https://cp.copernicus.org/articles/16/1953/2020/cp-16-1953-2020.html] use `nc_m = GCM_dir+'mask_144x72.nc'` (which can take several hours to be computed for all time slices and experiments). For testing, `nc_m = GCM_dir+'mask_36x18.nc'` can be used instead.
+This will run the GP analysis on each subsampling experiment individually and saves the output as netCDF files in the `Output/` directory. Required computation time mainly depends on the size of the chosen output grid (`nc_m`). Results in (Inglis et al., 2020)[https://cp.copernicus.org/articles/16/1953/2020/cp-16-1953-2020.html] use `nc_m = GCM_dir+'mask_144x72.nc'` (which can take several hours to be computed for all time slices and experiments). For testing, `nc_m = GCM_dir+'mask_36x18.nc'` can be used instead.
 
 #### 5. Plot the Gaussian process regression results
-In `GP_analysis_wrapper`, set `plot_GP_results=1` and run the script (again, after activating the new conda environment) with 
+In `GP_analysis_wrapper`, set `plot_GP_results=1` and run the script (again, after activating the new conda environment) with `bash GP_analysis_wrapper.sh`.
 
-```
-bash GP_analysis_wrapper.sh
-```
 This will recreate the maps from (Inglis et al., 2020)[https://cp.copernicus.org/articles/16/1953/2020/cp-16-1953-2020.html] based on the results produced above. Flags for which plots to produce can be set in `plot_GP_results.ncl`. All plots are saved to `results/plots/`.
