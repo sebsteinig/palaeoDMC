@@ -7,7 +7,7 @@ The code in this repository is intended to document the reconstruction of Eocene
 The PalaeoDMC package is still work in progress and has not been formally published. The original PalaeoDMC code was written by Fran Bragg (University of Bristol). Richard Wilkinson (University of Sheffield) wrote all code in `./core`. The PalaeoDMC code in this respository has been adapted and new NCL code has been added by Sebastian Steinig (University of Bristol). Please contact the respective person(s) if you want to use any of this code in your own work.
 
 ## Getting started
-Reproducing the (Inglis et al., 2020 analysis)[https://cp.copernicus.org/articles/16/1953/2020/cp-16-1953-2020.html] can be done by following these five steps:
+Reproducing the [Inglis et al. (2020) analysis](https://cp.copernicus.org/articles/16/1953/2020/cp-16-1953-2020.html) can be done by following these five steps:
 
 #### 1. Install dependencies
 The analysis uses the Python and NCL languages. All necessary packages can be installed with  [conda](https://conda.io/projects/conda/en/latest/index.html). Create an environment `paleoDMC` with 
