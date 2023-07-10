@@ -7,10 +7,9 @@ experiments = (/"ctrl","WithFrosty","NoTEX","NoMBT","NoMammal"/)
 labels      = (/"Default","WithFrosty","NoTEX","NoMBT","NoMammal"/)
 
 plot_time_slice_maps      = 1
-plot_sst_lat_maps         = 0
-plot_subsampling_maps     = 0
-calc_gm                   = 0
-plot_gm                   = 0
+plot_sst_lat_maps         = 1
+plot_subsampling_maps     = 1
+calc_gm                   = 1
 plot_zm                   = 0
 
 f_ERA5      = addfile(dir+"/reanalysis_reference/ERA5_t2m_1979-2018.timmean.zonmean.1deg.nc","r")
@@ -107,7 +106,7 @@ if (calc_gm .eq. 1) then
     T_gm      = dim_avg_wgt_n(T_zm,clat,1,2)
 
   ;---part 2: calculate GMST for N=10000 subsamples from posterior
-    N                 = 20
+    N                 = 10000
     GP_sample_mean    = new((/dimsizes(time_slices),dimsizes(areas),dimsizes(experiments),N,dimsizes(lat)/),"float")
 
     do tt=0,dimsizes(time_slices)-1
@@ -535,6 +534,7 @@ if (plot_sst_lat_maps .eq. 1) then
   res@mpOutlineDrawOrder          = "Draw"
   res@cnFillDrawOrder             = "PreDraw"
   res@cnMissingValFillColor       = "gray95"
+  res@mpProjection                = "CylindricalEquidistant"
   res_sd                  = res
 
   res_sd@cnLevels        := cn_levels_sd
@@ -576,7 +576,7 @@ if (plot_sst_lat_maps .eq. 1) then
     plot(tt*2+1)  = gsn_csm_contour_map_ce(wks,GP_SD(2,1+tt,0,:,:),res_sd)
 
     ;load and plot proxy data
-    proxy              := readAsciiTable(dir+"/Observation_Data/DeepMIP_eeco/DeepMIP_"+ref_frame+"_eeco_ctrl"+areas(1+tt)+"_all.txt",5,"float",1)
+    proxy              := readAsciiTable(dir+"/Observation_Data/DeepMIP_eeco/DeepMIP_"+ref_frame+"_eeco_ctrl"+areas(1+tt)+".txt",5,"float",1)
     dims_proxy         := dimsizes(proxy)
     colors_mean        := get_color_rgba("amwg_blueyellowred",cn_levels_mean,proxy(:,2))
     colors_sd          := get_color_rgba(cmap_sd,cn_levels_sd,proxy(:,3))
@@ -720,172 +720,6 @@ if (plot_subsampling_maps .eq. 1) then
     
   end do
   
-end if
-
-if (plot_gm .eq. 1) then
-  wks = gsn_open_wks("pdf",dir+"/results/plots/GP_regression_global_means_"+ref_frame)
-
-  res                    := True
-  res@gsnDraw             = False
-  res@gsnFrame            = False
-  res@tiXAxisFontHeightF  = 0.02
-  res@tiYAxisFontHeightF  = 0.01
-  res@trXMinF             = 0.5
-  res@trXMaxF             = tofloat(dimsizes(experiments))+.5
-  res@xyMarkLineModes     = "Markers"
-  res@xyMarkerSizeF       = 0.008
-  res@xyMarkers           = 16.
-  res@vpHeightF           = 0.2
-  res@vpWidthF            = 0.25
-  res@tmXBMode            = "Explicit"	
-  res@tmXBValues          = ispan(1,dimsizes(experiments),1)
-  res@tmXBLabels          = labels
-  res@tmXBLabelAngleF     = -45
-  res@tmXBLabelJust       = "CenterCenter"
-  res@tmYROn              = True
-  res@tmYRLabelsOn        = True
-  res@tiYAxisSide         = "Left"
-  res@trYMinF             = -2
-  res@trYMaxF             = 26
-  res@xyCurveDrawOrder    = "PostDraw"
-  res@tmYLMode            = "Explicit"	
-  res@tmYLValues          = (/0,4,8,12,16,20,24/)
-  res@tmYLLabels          = tostring(res@tmYLValues)
-  res@tmYLMinorValues     = ispan(-10,30,1)
-
-  
-  res_hollow                    = res
-  res_hollow@xyMarkers          = 4.
-  res_hollow@xyMarkerColor      = "black"
-  res_hollow@xyMarkerThicknessF = 1.5
-
-  pmres                  := True
-  pmres@gsMarkerIndex    = 4
-  pmres@gsMarkerSizeF    = 0.008
-  pmres@gsMarkerColor    = "black"
-  pmres@gsMarkerThicknessF  = 1.5
-  pmres@tfPolyDrawOrder   = "PostDraw"
-
-  pgres                  := True
-  pgres@gsLineThicknessF  = 1.5
-  pgres@tfPolyDrawOrder   = "PostDraw"
-  pgres@gsLineColor       = "gray50"
-
-  polyres                := True
-  polyres@gsEdgesOn      = False
-  polyres@gsFillColor   := "gray90"
-  polyres@tfPolyDrawOrder = "PreDraw"
-
-  resP              = True
-  resP@gsnFrame     = False
-;  resP@gsnMaximize  = True
-  resP@gsnPanelFigureStringsFontHeightF = 0.025
-  resP@amJust         = "TopLeft"
-;  resP@gsnPanelFigureStrings  := (/"(a) SST+LAT","(b) SST","(c) LAT"/)
-  resP@gsnPanelFigureStrings  := ""
-
-  plot1 :=  new(3,graphic)
-  plot2 :=  new(3,graphic)
-  plot3 :=  new(3,graphic)
-  mark1 :=  new(3,graphic)
-  mark2 :=  new(3,graphic)
-  mark3 :=  new(3,graphic)
-
-  poly1  = new(dimsizes(experiments)*3,graphic)
-  poly2  = new(dimsizes(experiments)*3,graphic)
-  poly3  = new(dimsizes(experiments)*3,graphic)
-  poly1a = new(dimsizes(experiments)*3,graphic)
-  poly2a = new(dimsizes(experiments)*3,graphic)
-  poly3a = new(dimsizes(experiments)*3,graphic)
-  poly1b = new(dimsizes(experiments)*3,graphic)
-  poly2b = new(dimsizes(experiments)*3,graphic)
-  poly3b = new(dimsizes(experiments)*3,graphic)
-
-  bpoly1  = new(dimsizes(experiments)*3,graphic)
-  bpoly2  = new(dimsizes(experiments)*3,graphic)
-  bpoly3  = new(dimsizes(experiments)*3,graphic)
-  bpoly1a = new(dimsizes(experiments)*3,graphic)
-  bpoly2a = new(dimsizes(experiments)*3,graphic)
-  bpoly3a = new(dimsizes(experiments)*3,graphic)
-  bpoly1b = new(dimsizes(experiments)*3,graphic)
-  bpoly2b = new(dimsizes(experiments)*3,graphic)
-  bpoly3b = new(dimsizes(experiments)*3,graphic)
-
-  circ1 = new(dimsizes(experiments)*3,graphic)
-  circ2 = new(dimsizes(experiments)*3,graphic)
-  circ3 = new(dimsizes(experiments)*3,graphic)
-
-  shade1 = new(dimsizes(experiments)*3,graphic)
-  shade2 = new(dimsizes(experiments)*3,graphic)
-
-  col1  :=  (/27,158,119/)/256.
-  col2  :=  (/217,95,2/)/256.
-  col3  :=  (/117,112,179/)/256.
-
-  width = 0.2
-  ystrings  = (/"GMST increase [~S~o~N~C]","GMSST increase [~S~o~N~C]"/)
-
-  do rr=0,0
-    res@tiYAxisString       = ystrings(rr)
-
-    yspan  = fspan(1-width,tofloat(dimsizes(experiments))-width,dimsizes(experiments))
-    res@xyMarkerColor    = col1
-    plot1(rr)            = gsn_csm_xy(wks,yspan,GP_mean_gm(0,rr,:),res)
-    mark1(rr)            = gsn_csm_xy(wks,yspan,GP_mean_gm(0,rr,:),res_hollow)
-
-    yspan_shade         = fspan(1., tofloat(dimsizes(experiments)),dimsizes(experiments))
-    do pp=0,dimsizes(experiments)-1
-      if (pp/2 .ne. pp/2.) then
-        shade1(rr*dimsizes(experiments)+pp)  = gsn_add_polygon(wks,plot1(rr),(/yspan_shade(pp)-2.5*width,yspan_shade(pp)+2.5*width,yspan_shade(pp)+2.5*width,yspan_shade(pp)-2.5*width,yspan_shade(pp)-2.5*width/),(/-30,-30,30,30,-30/),polyres)
-      end if
-    end do 
-
-    do pp=0,dimsizes(experiments)-1
-      poly1(rr*dimsizes(experiments)+pp)  = gsn_add_polyline(wks,plot1(rr),(/yspan(pp),yspan(pp)/),(/GP_mean_gm(0,rr,pp)-GP_SD_gm(0,rr,pp),GP_mean_gm(0,rr,pp)+GP_SD_gm(0,rr,pp)/),pgres)
-      poly1a(rr*dimsizes(experiments)+pp)  = gsn_add_polyline(wks,plot1(rr),(/yspan(pp)-(width/3),yspan(pp)+(width/3)/),(/GP_mean_gm(0,rr,pp)-GP_SD_gm(0,rr,pp),GP_mean_gm(0,rr,pp)-GP_SD_gm(0,rr,pp)/),pgres)
-      poly1b(rr*dimsizes(experiments)+pp)  = gsn_add_polyline(wks,plot1(rr),(/yspan(pp)-(width/3),yspan(pp)+(width/3)/),(/GP_mean_gm(0,rr,pp)+GP_SD_gm(0,rr,pp),GP_mean_gm(0,rr,pp)+GP_SD_gm(0,rr,pp)/),pgres)
-    end do
-
-    yspan               = fspan(1., tofloat(dimsizes(experiments)),dimsizes(experiments))
-    res@xyMarkerColor   = col2
-    plot2(rr)            = gsn_csm_xy(wks,yspan,GP_mean_gm(1,rr,:),res)
-    mark2(rr)            = gsn_csm_xy(wks,yspan,GP_mean_gm(1,rr,:),res_hollow)
-
-
-    do pp=0,dimsizes(experiments)-1
-      poly2(rr*dimsizes(experiments)+pp)  = gsn_add_polyline(wks,plot2(rr),(/yspan(pp),yspan(pp)/),(/GP_mean_gm(1,rr,pp)-GP_SD_gm(1,rr,pp),GP_mean_gm(1,rr,pp)+GP_SD_gm(1,rr,pp)/),pgres)
-      poly2a(rr*dimsizes(experiments)+pp)  = gsn_add_polyline(wks,plot2(rr),(/yspan(pp)-(width/3),yspan(pp)+(width/3)/),(/GP_mean_gm(1,rr,pp)-GP_SD_gm(1,rr,pp),GP_mean_gm(1,rr,pp)-GP_SD_gm(1,rr,pp)/),pgres)
-      poly2b(rr*dimsizes(experiments)+pp)  = gsn_add_polyline(wks,plot2(rr),(/yspan(pp)-(width/3),yspan(pp)+(width/3)/),(/GP_mean_gm(1,rr,pp)+GP_SD_gm(1,rr,pp),GP_mean_gm(1,rr,pp)+GP_SD_gm(1,rr,pp)/),pgres)
-    end do
-
-    yspan               = fspan(1+width, tofloat(dimsizes(experiments))+width,dimsizes(experiments))
-    res@xyMarkerColor   = col3
-    plot3(rr)            = gsn_csm_xy(wks,yspan,GP_mean_gm(2,rr,:),res)
-    mark3(rr)            = gsn_csm_xy(wks,yspan,GP_mean_gm(2,rr,:),res_hollow)
-
-    do pp=0,dimsizes(experiments)-1
-      poly3(rr*dimsizes(experiments)+pp)  = gsn_add_polyline(wks,plot3(rr),(/yspan(pp),yspan(pp)/),(/GP_mean_gm(2,rr,pp)-GP_SD_gm(2,rr,pp),GP_mean_gm(2,rr,pp)+GP_SD_gm(2,rr,pp)/),pgres)
-      poly3a(rr*dimsizes(experiments)+pp)  = gsn_add_polyline(wks,plot3(rr),(/yspan(pp)-(width/3),yspan(pp)+(width/3)/),(/GP_mean_gm(2,rr,pp)-GP_SD_gm(2,rr,pp),GP_mean_gm(2,rr,pp)-GP_SD_gm(2,rr,pp)/),pgres)
-      poly3b(rr*dimsizes(experiments)+pp)  = gsn_add_polyline(wks,plot3(rr),(/yspan(pp)-(width/3),yspan(pp)+(width/3)/),(/GP_mean_gm(2,rr,pp)+GP_SD_gm(2,rr,pp),GP_mean_gm(2,rr,pp)+GP_SD_gm(2,rr,pp)/),pgres)
-    end do
-
-    overlay(plot1(rr),mark1(rr))
-    overlay(plot2(rr),mark2(rr))
-    overlay(plot3(rr),mark3(rr))
-    overlay(plot1(rr),plot2(rr))
-    overlay(plot1(rr),plot3(rr))
-  end do
-
-  res1                     = True
-  res2                     = True
-;  res2@gsnAttachPlotsXAxis = True
-;  anno1 = gsn_attach_plots(plot1(0),plot1(1),res1,res2)
-;  anno2 = gsn_attach_plots(plot1(0),plot1(1),res1,res2)
-
-  gsn_panel(wks,plot1,(/1,1/),resP)
-
-;  draw(plot1)
-
 end if
 
 if (plot_zm .eq. 1) then
