@@ -1,4 +1,4 @@
-name: paleoDMC
+name: palaeoDMC
 channels:
   - conda-forge
 dependencies:

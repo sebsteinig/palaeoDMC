@@ -1,11 +1,11 @@
-export dir="/Volumes/external_Samsung-SSD/documents/coding_github/paleoDMC"
+export dir="/Volumes/external_Samsung-SSD/documents/coding_github/palaeoDMC"
 
 time_slice_list="eeco petm lp"
 # time_slice_list="petm"
 cut_offs="2.5"
 export REF_FRAME="mantle" # or "pmag"
 
-convert_hollis=0
+convert_hollis=1
 calculate_GP=0
 plot_GP_results=1
 thin=1 # thinning factor for GP analysis (1=use all data)
@@ -21,7 +21,7 @@ for cut_off in ${cut_offs}; do
   # create input observations from Hollis et al. (2019) CSV file
   if [ ${convert_hollis} -eq 1 ]; then
     cd ${dir}
-    ncl convert_hollis2PaleoDMC.ncl
+    ncl convert_hollis2palaeoDMC.ncl
   fi
 
   if [ ${calculate_GP} -eq 1 ]; then

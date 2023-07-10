@@ -10,16 +10,16 @@ The PalaeoDMC package is still work in progress and has not been formally publis
 Reproducing the [Inglis et al. (2020) analysis](https://cp.copernicus.org/articles/16/1953/2020/cp-16-1953-2020.html) can be done by following these five steps:
 
 ### 1. Install dependencies
-The analysis uses the Python and NCL languages. All necessary packages can be installed with  [conda](https://conda.io/projects/conda/en/latest/index.html). Create an environment `paleoDMC` with 
+The analysis uses the Python and NCL languages. All necessary packages can be installed with  [conda](https://conda.io/projects/conda/en/latest/index.html). Create an environment `palaeoDMC` with 
 
 ```
-conda env create --name paleoDMC --file=environment.yml
+conda env create --name palaeoDMC --file=environment.yml
 ``` 
 
 using the `environment.yml` file from this repository to install all necessary packages. This environment can then be activated with
 
 ```
-conda activate paleoDMC
+conda activate palaeoDMC
 ```
 
 ### 2. Set working directory
@@ -30,7 +30,7 @@ The full DeepMIP proxy compilation `data/full_deepMIP_temperature_compilation_1.
 
 The newly created CSV files are saved to `Observation_Data/`. The main input for this step is a minimum uncertainty threshold (`cut_offs`) that gets applied to all proxy data. The reasoning is that some entries in the DeepMIP proxy collection have unrealistically low uncertainties, which would increase their relevant influence on the GP results. A values of `cut_offs="2.5"` has been used for [Inglis et al. (2020)](https://cp.copernicus.org/articles/16/1953/2020/cp-16-1953-2020.html), but you can enter a list of values to check the sensitivity of the results. Original and updated uncertainties of the full compilation (using a threshold of 2.5 degC) are shown in the Figure below (which gets automatically created by the script).
 
-![alt text](https://github.com/sebsteinig/paleoDMC/blob/main/example_output/DeepMIP_proxy_SD.png?raw=true)
+![alt text](https://github.com/sebsteinig/palaeoDMC/blob/main/example_output/DeepMIP_proxy_SD.png?raw=true)
 
 
 ### 4. Run the Gaussian process regression
