@@ -18,14 +18,14 @@ OBS_zm      = short2flt(f_ERA5->t2m(0,:,0))
 OBS_zm      = OBS_zm-273.15
 
 ;f_mask      = addfile(dir+"/Model_data/no_model/mask.nc","r")
-;f_mask      = addfile(dir+"/mask_36x18.nc","r")
-; f_mask      = addfile(dir+"/mask_144x72.nc","r")
-f_mask      = addfile(dir+"/mask_72x36.nc","r")
+;f_mask      = addfile(dir+"/Model_data/no_model/mask_36x18.nc","r")
+f_mask      = addfile(dir+"/Model_Data/no_model/mask_144x72.nc","r")
+; f_mask      = addfile(dir+"/Model_data/no_model/mask_72x36.nc","r")
 ls_mask     = f_mask->mask
 lat         = f_mask->lat
 lon         = f_mask->lon
 
-f_mask_outline  = addfile(dir+"/mask.nc","r")
+f_mask_outline  = addfile(dir+"/Model_data/no_model/mask.nc","r")
 ls_mask_outline  = f_mask_outline->mask
 paleo_outline (ls_mask_outline,ls_mask_outline&lat,ls_mask_outline&lon,1,"herold_eocene")
 
@@ -189,7 +189,7 @@ if (plot_time_slice_maps .eq. 1) then
   res@lbLabelBarOn	              = False
   res@lbOrientation               = "horizontal"
   res@lbLabelFontHeightF	        =	0.02
-  res@lbTitleString               = "~F8~D~F21~GMST (~S~o~N~C)"
+  res@lbTitleString               = "~F8~D~F21~T (~S~o~N~C)"
   res@lbTitleFontHeightF          = 0.02
 ;  res@lbLabelStride               = 2
   res@pmLabelBarWidthF            = 0.39
@@ -527,7 +527,7 @@ if (plot_sst_lat_maps .eq. 1) then
   res@lbLabelBarOn	              = False
   res@lbOrientation               = "horizontal"
   res@lbLabelFontHeightF	        =	0.025
-  res@lbTitleString               = "~F8~D~F21~GMST (~S~o~N~C)"
+  res@lbTitleString               = "~F8~D~F21~T (~S~o~N~C)"
   res@lbTitleFontHeightF          = 0.025
   res@pmLabelBarWidthF            = 0.6
   res@pmLabelBarOrthogonalPosF           = 0.12
